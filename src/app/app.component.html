@@ -1,3 +1,38 @@
-<h1>Hellow World</h1>
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand mr-auto" href="#">BlockPoll</a>
+  <button type="button" (click)="showForm = !showForm" class="btn btn-secondary">Create Poll</button>
+</nav>
 
-<button type="button" class="btn btn-primary">Primary</button>
+<section class="jumpotron bg-light text-center">
+  <h1>Polls Re-Imagined</h1>
+  <p class="lead text-muted">
+    Powerd By Blockchain
+  </p>
+</section>
+
+<app-poll-create *ngIf="showForm">
+
+</app-poll-create>
+<div class="d-flex">
+<div class="container poll-list">
+  <app-poll
+   *ngFor="let poll of polls"
+  [question]="poll.question"
+  [votes]="poll.results"
+  [voted]="poll.voted"
+  [pollImage]="poll.thumnail"
+  (click)="setActivePoll(poll)"
+  ></app-poll>
+</div>
+<div class="container poll-detail">
+    <app-poll-vote
+    *ngIf="activePoll"
+    [voted]="activePoll.voted"
+    [question]="activePoll.question"
+    [options]="activePoll.options"
+    [results]="activePoll.results"
+    >
+
+    </app-poll-vote>
+</div>
+</div>
