@@ -21,6 +21,7 @@ contract PollContract{
     Poll[] polls;
     mapping(address => Voter) private voters;
 
+        event PollCreated(uint256);
 
     function createPoll(string memory _question, string memory _thum, string[] memory _options) public {
         require(bytes(_question).length > 0,"Empty question");
@@ -37,6 +38,7 @@ contract PollContract{
         });
 
         polls.push(newPoll);
+        emit PollCreated(pollId);
     }
 
 
@@ -50,5 +52,30 @@ contract PollContract{
             polls[_pollId].options
 
             );
+    }
+
+
+
+
+    function vote(uint256 _pollId, uint64 _vote) external{
+        require(_pollId < polls.length,"Poll doesn't exist");
+        require(_vote < polls[_pollId].options.length, " Invalid vote");
+        require(voters[msg.sender].votedMap[_pollId] == false,"you already voted");
+
+        polls[_pollId].votes[_vote] +=1;
+
+        voters[msg.sender].votedIds.push(_pollId);
+        voters[msg.sender].votedMap[_pollId] = true;
+    }
+
+    function getVoter(address _id) external view  returns(address, uint256[] memory){
+      return (
+        voters[_id].id,
+        voters[_id].votedIds
+      );
+    }
+
+    function getTotalPolls() external view returns(uint256){
+        return polls.length;
     }
 }
