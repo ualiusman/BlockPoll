@@ -29,4 +29,14 @@ export class Web3Service {
       console.log("Meta mask not found");
     }
   }
+
+
+
+  getAccount(): Promise<string> | undefined{
+    return this.web3?.eth.getAccounts().then((accounts) => accounts[0] || '');
+  }
+  async executeTransaction(fnName:string, ...args: any[]): Promise<void>{
+    const acc = this.getAccount();
+    this.contract?.methods[fnName](...args).send({ from: acc});
+  }
 }

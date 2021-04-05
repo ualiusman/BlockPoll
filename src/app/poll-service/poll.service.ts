@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Poll, PollForm } from '../types';
 import { delay } from 'rxjs/operators';
+import { Web3Service } from '../blockchain/web3.service';
 @Injectable({
   providedIn: 'root'
 })
 export class PollService {
 
-  constructor() { }
+  constructor(private web3: Web3Service) { }
 
 
   getPolls(): Observable<Poll[]>{
@@ -33,10 +34,16 @@ export class PollService {
   }
 
   vote(pollId:number, voteNumber:number){
+    this.web3.executeTransaction("vote", pollId,voteNumber);
     console.log(pollId,voteNumber);
   }
 
   createPoll(pollForm:PollForm){
+    this.web3.executeTransaction("createPoll",
+     pollForm.question,
+     pollForm.thumnail || "",
+     pollForm.options
+     );
     console.log(pollForm);
   }
 }
