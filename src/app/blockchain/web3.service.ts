@@ -36,7 +36,13 @@ export class Web3Service {
     return this.web3?.eth.getAccounts().then((accounts) => accounts[0] || '');
   }
   async executeTransaction(fnName:string, ...args: any[]): Promise<void>{
-    const acc = this.getAccount();
+    const acc = await this.getAccount();
     this.contract?.methods[fnName](...args).send({ from: acc});
+  }
+
+
+  async call(fnName:string, ...args: any[]){
+    const acc = await this.getAccount();
+    return this.contract?.methods[fnName](...args).call({from: acc});
   }
 }
