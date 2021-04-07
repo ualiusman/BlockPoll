@@ -52,12 +52,19 @@ export class PollService {
 
   private normalizePoll(pollRaw: any, voter: any): any{
     return {
-      id:pollRaw[0],
+      id: parseInt(pollRaw[0]),
       question:pollRaw[1],
       thumnail:pollRaw[2],
       results:pollRaw[3].map( (vote: string) => parseInt(vote)),
       options:pollRaw[4],
+      voted: voter.votedIds.length
+      && voter.votedIds.find((votedId:any) => votedId === parseInt(pollRaw[0])) || undefined
     };
+  }
+
+
+  onEvent(name:string){
+    return this.web3.onEvents(name);
   }
 }
 
